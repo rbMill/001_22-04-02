@@ -101,9 +101,11 @@ UI:
                                     Button:
                                         size_hint: None,1
                                         width: self.parent.height
-
-
-
+                Button:
+                    size_hint: 0.1,0.1
+                    pos_hint: {"left":0,"y":0.5}
+                    on_touch_move: print(self,*args)
+                    on_release: self.x-=15
 
             TextInput:
                 size_hint: 1,0.3
