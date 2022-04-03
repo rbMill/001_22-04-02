@@ -12,101 +12,95 @@ UI:
         BoxLayout:
             size_hint: 0.65,1
             orientation: 'vertical'
-            FloatLayout:
-                id: editor_frame
-                size_hint: 1,0.7
-                BoxLayout:
-                    orientation: 'vertical'
-                    pos_hint: {"center_x":0.5,"center_y":0.5}
-                    AnchorLayout:
-                        size_hint: 1, 0.2
-                        Widget:
-                            canvas.before:
-                                Color:
-                                    rgba: 0.3,0.3,0.3,1
-                                Rectangle:
-                                    pos: self.pos
-                                    size: self.size
-                        GridLayout:
-                            cols: 7
-                            Button:
-                                id: defBlock
-                                size_hint: (None,1)
-                                width: self.parent.height
-                                on_press: root.on_CLD(self,editor_frame)
-                                on_touch_up: root.off_CLD()
-                            Button:
-                                size_hint: (None,1)
-                                width: self.parent.height
-                                on_press: root.on_CLD(self,editor_frame)
-                                on_touch_up: root.off_CLD()
-                            Button:
-                                size_hint: (None,1)
-                                width: self.parent.height
-                                on_press: root.on_CLD(self,editor_frame)
-                                on_touch_up: root.off_CLD()
-                            Button:
-                                size_hint: (None,1)
-                                width: self.parent.height
-                                on_press: root.on_CLD(self,editor_frame)
-                                on_touch_up: root.off_CLD()
-                            Button:
-                                id: pos_label
-                                size_hint: (None,1)
-                                width: self.parent.height
-                                on_press: root.on_CLD(self,editor_frame)
-                                on_touch_up: root.off_CLD(self)
-                    ScrollView:
-                        id: sub_editor_frame
-                        size_hint: 1, 0.8
-                        do_scroll_x: True
-                        do_scroll_y: False
-                        bar_pos_x : 'bottom'
-                        bar_width: 6
-                        smooth_scroll_end: 1
-                        scroll_x: 0
-                        GridLayout:
-                            orientation: 'lr-tb'
-                            size_hint: None,1
-                            width: sub_editor_frame.width*5
-                            row: 3
-                            cols: 1
-                            AnchorLayout:
-                                size_hint: 1,0.333
-                                canvas:
-                                    Color:
-                                        rgba: 0.5,0.2,0.2,1
-                                    Rectangle:
-                                        pos: self.pos
-                                        size: self.size
-                                BoxLayout:
-                            AnchorLayout:
-                                size_hint: 1,0.333
-                                canvas:
-                                    Color:
-                                        rgba: 0.2,0.5,0.2,1
-                                    Rectangle:
-                                        pos: self.pos
-                                        size: self.size
-                                BoxLayout:
-                            AnchorLayout:
-                                size_hint: 1,0.333
-                                canvas:
-                                    Color:
-                                        rgba: 0.2,0.2,0.5,1
-                                    Rectangle:
-                                        pos: self.pos
-                                        size: self.size
-                                BoxLayout:
-                                    Button:
-                                        size_hint: None,1
-                                        width: self.parent.height
-                Button:
-                    size_hint: 0.1,0.1
-                    pos_hint: {"left":0,"y":0.5}
-                    on_touch_move: print(self,*args)
-                    on_release: self.x-=15
-
+            editor_frame@FloatLayout:
+#                id: editor_frame
+#                size_hint: 1,0.7
+#                BoxLayout:
+#                    orientation: 'vertical'
+#                    pos_hint: {"center_x":0.5,"center_y":0.5}
+#                    AnchorLayout:
+#                        size_hint: 1, 0.2
+#                        Widget:
+#                            canvas.before:
+#                                Color:
+#                                    rgba: 0.3,0.3,0.3,1
+#                                Rectangle:
+#                                    pos: self.pos
+#                                    size: self.size
+#                        GridLayout:
+#                            cols: 7
+#                            Button:
+#                                id: defBlock
+#                                size_hint: (None,1)
+#                                width: self.parent.height
+#                                on_press: root.on_CLD(self,editor_frame)
+#                                on_touch_up: root.off_CLD()
+#                            Button:
+#                                size_hint: (None,1)
+#                                width: self.parent.height
+#                                on_press: root.on_CLD(self,editor_frame)
+#                                on_touch_up: root.off_CLD()
+#                            Button:
+#                                size_hint: (None,1)
+#                                width: self.parent.height
+#                                on_press: root.on_CLD(self,editor_frame)
+#                                on_touch_up: root.off_CLD()
+#                            Button:
+#                                size_hint: (None,1)
+#                                width: self.parent.height
+#                                on_press: root.on_CLD(self,editor_frame)
+#                                on_touch_up: root.off_CLD()
+#                            Button:
+#                                id: pos_label
+#                                size_hint: (None,1)
+#                                width: self.parent.height
+#                                on_press: root.on_CLD(self,editor_frame)
+#                                on_touch_up: root.off_CLD(self)
+#                    ScrollView:
+#                        id: sub_editor_frame
+#                        size_hint: 1, 0.8
+#                        do_scroll_x: True
+#                        do_scroll_y: False
+#                        bar_pos_x : 'bottom'
+#                        bar_width: 6
+#                        smooth_scroll_end: 1
+#                        scroll_x: 0
+#                        GridLayout:
+#                            orientation: 'lr-tb'
+#                            size_hint: None,1
+#                            width: sub_editor_frame.width*5
+#                            row: 3
+#                            cols: 1
+#                            AnchorLayout:
+#                                size_hint: 1,0.333
+#                                canvas:
+#                                    Color:
+#                                        rgba: 0.5,0.2,0.2,1
+#                                    Rectangle:
+#                                        pos: self.pos
+#                                        size: self.size
+#                                BoxLayout:
+#                            AnchorLayout:
+#                                size_hint: 1,0.333
+#                                canvas:
+#                                    Color:
+#                                        rgba: 0.2,0.5,0.2,1
+#                                    Rectangle:
+#                                        pos: self.pos
+#                                        size: self.size
+#                                BoxLayout:
+#                            AnchorLayout:
+#                                size_hint: 1,0.333
+#                                canvas:
+#                                    Color:
+#                                        rgba: 0.2,0.2,0.5,1
+#                                    Rectangle:
+#                                        pos: self.pos
+#                                        size: self.size
+#                                BoxLayout:
+#                                    Button:
+#                                        size_hint: None,1
+#                                        width: self.parent.height
             TextInput:
                 size_hint: 1,0.3
         BoxLayout:

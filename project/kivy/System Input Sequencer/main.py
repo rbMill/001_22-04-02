@@ -1,6 +1,8 @@
+import types
+
 from kivy.app import App
 from kivy.uix.anchorlayout import AnchorLayout
-from kivy.uix.scrollview import ScrollView
+from kivy.uix.floatlayout import FloatLayout
 from kivy.core.window import Window
 from kivy.config import Config
 Config.set('graphics','resizable','1')
@@ -21,8 +23,9 @@ class UI(AnchorLayout):
     def kBoard_not_use(self):
         pass
 
-    def on_motion
-
+    def emPress(self,widg=None,*args):
+        mouse = args[1]
+        print(widg,mouse.button)
 
 
     def kBoard_on_close(self):
@@ -46,6 +49,12 @@ class UI(AnchorLayout):
             print('canceling....')
             self.mouseEvent = None
 
+
+class editor_frame(FloatLayout):
+    def __init__(self, **kwargs):
+        super(UI, self).__init__(**kwargs)
+        print('ulol?')
+
 class SIS_maker(App):
     def Build(self):
         self.title = 'System Input Sequencer'
@@ -57,4 +66,3 @@ Window.size = Window.size
 Window.maximize()
 Window.clearcolor = [0.2,0.2,0.22,1]
 SIS_maker().run()
-
