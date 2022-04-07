@@ -1,22 +1,42 @@
-from matplotlib import pyplot as plt
-import numpy as np
-import math
+import cmath
+import random
 
-x,y = [],[]
+from matplotlib import pyplot as plt
+
+x_,y_ = -1,0
 fig, ax = plt.subplots()
 a = 2
-ax.set_xlim([-1.5, 1.5])
-ax.set_ylim([-1.5, 1.5])
-for i in range(360*1):
-    i = i*math.pi/180
-    x.append(math.cos(i)*i/360)
-    y.append(math.sin(i)*i/360)
-    if len(x) >= 22:
-        x = x[-22:]
-    if len(y) >= 22:
-        y = y[-22:]
-    ax.plot(x, y,'black')
-    plt.pause(0.001)
+
+xlim = [-3,3]
+ylim = [-3,3]
+
+
 ax.set_aspect('equal')
+trajx = []
+trajy = []
+for i in range(360*5):
+    ax.clear()
+    ax.set_xlim(xlim)
+    ax.set_ylim(ylim)
+    ax.set_aspect('equal')
+    I = i
+    r = random.randint(-15,15)
+    i = ((i + 45 + r) * cmath.pi)/180
+
+    x1 = cmath.cos(i)
+    x2 = -cmath.cos(i*2) + x1
+
+    y1 = cmath.sin(i)
+    y2 = cmath.sin(i*2) + y1
+
+    xs = [0,x1,x2]
+    ys = [0,y1,y2]
+
+    trajx.append(xs[-1])
+    trajy.append(ys[-1])
+    ax.plot(trajx, trajy, 'red')
+    ax.plot(xs,ys,'black')
+
+    plt.pause(0.001)
 
 plt.show()
