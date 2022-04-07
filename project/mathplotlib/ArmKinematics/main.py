@@ -1,7 +1,9 @@
 import cmath
 import random
+import numpy as np
 
 from matplotlib import pyplot as plt
+
 
 x_,y_ = -1,0
 fig, ax = plt.subplots()
@@ -26,12 +28,11 @@ for i in range(360*5):
     i = ((i) * cmath.pi)/180
 
     r = cmath.sin(i*4)
-    print(r)
-    x1 = cmath.cos(i)
-    x2 = cmath.cos(i)*r + x1
+    x1 = cmath.cos(i**1.1)
+    x2 = cmath.cos(i**0.5) + x1
 
-    y1 = cmath.sin(i)
-    y2 = cmath.sin(i)*r + y1
+    y1 = cmath.sin(i**1.1)
+    y2 = cmath.sin(i**0.5) + y1
 
     xs = [0,x1,x2]
     ys = [0,y1,y2]
@@ -41,6 +42,6 @@ for i in range(360*5):
     ax.plot(trajx, trajy, 'red')
     ax.plot(xs,ys,'black')
 
-    plt.pause(0.001)
+    plt.pause(0.0001)
 
 plt.show()
