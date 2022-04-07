@@ -10,6 +10,7 @@ a = 2
 xlim = [-3,3]
 ylim = [-3,3]
 
+c = 4/3
 
 ax.set_aspect('equal')
 trajx = []
@@ -20,14 +21,17 @@ for i in range(360*5):
     ax.set_ylim(ylim)
     ax.set_aspect('equal')
     I = i
-    r = random.randint(-15,15)
-    i = ((i + 45 + r) * cmath.pi)/180
+    # r = random.randint(9,11)/10
 
+    i = ((i) * cmath.pi)/180
+
+    r = cmath.sin(i*4)
+    print(r)
     x1 = cmath.cos(i)
-    x2 = -cmath.cos(i*2) + x1
+    x2 = cmath.cos(i)*r + x1
 
     y1 = cmath.sin(i)
-    y2 = cmath.sin(i*2) + y1
+    y2 = cmath.sin(i)*r + y1
 
     xs = [0,x1,x2]
     ys = [0,y1,y2]
