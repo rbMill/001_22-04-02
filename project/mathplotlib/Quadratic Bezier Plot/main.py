@@ -7,6 +7,9 @@ if False | False:
 class Bezier:
     def __init__(self):
         fig, self.ax = plt.subplots()
+        self.show_control = True
+        self.show_procedure = True
+
 
     def myBezier(self,p1=None,p2=None,p3=None):
         if p1 == None or p2 == None or p3 == None:
@@ -31,7 +34,8 @@ class Bezier:
         self.ax.set_aspect('equal')
 
         # plotting
-        self.ax.plot(px,py,'Black')
+        if self.show_control:
+            self.ax.plot(px,py,'Black')
 
         _x,_y = px[0],py[0]
         _x1,_y1 = px[1],py[1]
@@ -40,10 +44,11 @@ class Bezier:
         nx,ny = _x,_y
 
         for i,(x,y,x1,y1) in enumerate(zip(trajx,trajy,trajx1,trajy1)):
-            self.ax.plot([_x,x],[_y,y],'red')
-            _x,_y = x,y
+            if self.show_procedure:
+                self.ax.plot([_x,x],[_y,y],'red')
+                self.ax.plot([_x1,x1],[_y1,y1],'blue')
 
-            self.ax.plot([_x1,x1],[_y1,y1],'blue')
+            _x,_y = x,y
             _x1, _y1 = x1, y1
 
             prc = i/res
@@ -55,10 +60,26 @@ class Bezier:
             plt.pause(0.001)
 
 bz = Bezier()
-bz.myBezier([1,1],[1,0],[0,0])
-bz.myBezier([1,1],[0,1],[0,0])
-bz.myBezier([1,1],[0,0],[1,0])
-bz.myBezier([1,1],[0,0],[0,1])
-bz.myBezier([1,0],[1,0],[0,1])
-bz.myBezier([1,0],[0,1],[0,1])
+bz.show_control = False
+bz.show_procedure = False
+
+bz.myBezier([1,1],[1,0],[0,0]) #
+
+bz.myBezier([0,0],[0,0.5],[0.5,0.5])
+
+bz.myBezier([1,1],[0,1],[0,0]) #
+
+bz.myBezier([0,0],[0.5,0],[0.5,0.5])
+
+bz.myBezier([0,1],[0,0],[1,0]) #
+
+bz.myBezier([1,0],[1,0.5],[0.5,0.5])
+
+bz.myBezier([0,1],[0,0],[1,0]) #
+
+bz.myBezier([1,0],[0.5,0],[0.5,0.5])
+
+bz.myBezier([0,1],[1,1],[1,0]) #
+
+
 plt.show()

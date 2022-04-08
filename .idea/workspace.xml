@@ -46,7 +46,7 @@
       <recent name="C:\Users\Asus\Documents\GitHub\001_22-04-02\venv" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.T#1">
+  <component name="RunManager" selected="Python.main (3)">
     <configuration name="T#1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="001_22-04-02" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -154,9 +154,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.T#1" />
-        <item itemvalue="Python.main (4)" />
         <item itemvalue="Python.main (3)" />
+        <item itemvalue="Python.main (4)" />
+        <item itemvalue="Python.T#1" />
         <item itemvalue="Python.main (2)" />
         <item itemvalue="Python.main" />
       </list>

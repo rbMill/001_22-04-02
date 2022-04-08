@@ -193,6 +193,15 @@ class myColor():
         else:
             return "Incorrect Input"
 class myList(list):
+    def bitGenerator(start, stop):
+        size = len(bin(stop)[2:])
+        result = []
+        for i in range(start, stop + 1):
+            txt = bin(i)[2:]
+            bn = ('0' * (size - len(txt))) + txt
+            result.append(bn)
+        return list(result)
+
     def list_subtract(l1, l2):
         len1 = myList.list_element_count(l1)
         len2 = myList.list_element_count(list(filter(lambda x: l1.count(x) >= 1, l2)))
