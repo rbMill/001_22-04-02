@@ -28,14 +28,15 @@ for i in range(360*5):
     i = ((i) * cmath.pi)/180
 
     r = cmath.sin(i*4)
-    x1 = cmath.cos(i**1.1)
+    org = [cmath.sin(i)/2,cmath.sin(i)/2]
+    x1 = cmath.cos(i**1.1) + org[0]
     x2 = cmath.cos(i**0.5) + x1
 
-    y1 = cmath.sin(i**1.1)
+    y1 = cmath.sin(i**1.1) + org[1]
     y2 = cmath.sin(i**0.5) + y1
 
-    xs = [0,x1,x2]
-    ys = [0,y1,y2]
+    xs = [org[0],x1,x2]
+    ys = [org[1],y1,y2]
 
     trajx.append(xs[-1])
     trajy.append(ys[-1])
