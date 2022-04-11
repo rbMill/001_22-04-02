@@ -52,8 +52,11 @@ class UI(AnchorLayout):
 
 class editor_frame(FloatLayout):
     def __init__(self, **kwargs):
-        super(UI, self).__init__(**kwargs)
+        super(editor_frame, self).__init__(**kwargs)
         print('ulol?')
+
+    def click(self,*args):
+        print('tite')
 
 class SIS_maker(App):
     def Build(self):
