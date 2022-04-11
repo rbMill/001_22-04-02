@@ -1,6 +1,9 @@
 import numpy as np
 import time
 
-while True:
-	print(np.random.rand(3))
-	time.sleep(1)
+class nums:
+	def __init__(self):
+		print('lol')
+
+	def _init1(self):
+		pass

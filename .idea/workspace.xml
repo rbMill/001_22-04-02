@@ -25,6 +25,9 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/project/kivy/Rubiks Cube/main.py" root0="SKIP_INSPECTION" />
+  </component>
   <component name="ProjectId" id="27EE3YsrSc75HKppupjjFXNCtUs" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -34,7 +37,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/venv/Lib" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/venv39" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Python" />
   </component>
   <component name="RecentsManager">
@@ -160,9 +163,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.T#2" />
         <item itemvalue="Python.__init__" />
         <item itemvalue="Python.myLibrary" />
-        <item itemvalue="Python.T#2" />
         <item itemvalue="Python.main (2)" />
       </list>
     </recent_temporary>
