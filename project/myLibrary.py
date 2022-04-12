@@ -202,6 +202,30 @@ class myList(list):
             result.append(bn)
         return list(result)
 
+    def gen2D(col, row, orientation='lr-tb', ratio=1):
+        _col = [c / col * ratio for c in range(col)]
+        _row = [r / row * ratio for r in range(row)]
+        res = []
+        if orientation == 'lr-tb':
+            xcol = _col
+            yrow = _row[::-1]
+        elif orientation == 'lr-bt':
+            xcol = _col
+            yrow = _row
+        elif orientation == 'rl-bt':
+            xcol = _col[::-1]
+            yrow = _row
+        elif orientation == 'rl-tb':
+            xcol = _col[::-1]
+            yrow = _row[::-1]
+        else:
+            raise ValueError('orientation not expected, expected\n'
+                             'lr-tb\nlr-bt\nrl-bt\nrl-bt')
+        for x in xcol:
+            for y in yrow:
+                res.append([x, y])
+        return res
+
     def list_subtract(l1, l2):
         len1 = myList.list_element_count(l1)
         len2 = myList.list_element_count(list(filter(lambda x: l1.count(x) >= 1, l2)))

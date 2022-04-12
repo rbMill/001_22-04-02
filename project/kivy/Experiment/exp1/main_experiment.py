@@ -22,7 +22,18 @@ from kivy.clock import Clock
 class rubiksUI(AnchorLayout):
     def __init__(self, **kwargs):
         super(rubiksUI, self).__init__(**kwargs)
+        self.grab_event = None
 
+    def move(self,widg):
+        def mv(*args):
+            widg.x = Window._mouse_x - int(widg.width/2)
+            widg.y = Window.mouse_pos[1] - int(widg.height / 2)
+        self.grab_event = Clock.schedule_interval(mv,0.000001)
+
+    def release(self,*args):
+        if self.grab_event != None:
+            self.grab_event.cancel()
+            self.grab_event = None
 
 class grpRubiks(Button):
     def __init__(self, **kwargs):
@@ -30,6 +41,7 @@ class grpRubiks(Button):
         self.rec = None
         self.col = None
         self.size = [600, 600]
+        self.anchor_x  = 'left'
         Window.bind(on_resize=self.fixAxpect)
         _x,_y = [100, 100, 400],[100, 400, 100]
         return
@@ -79,7 +91,7 @@ class grpRubiks(Button):
 class Rubiks(App):
     def Build(self):
         self.title = 'Rubiks'
-        Builder.load_file('rubiks.kv')
+        Builder.load_file('../../Rubiks Cube/rubiks.kv')
         return rubiksUI()
 
 
