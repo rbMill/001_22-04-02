@@ -1,3 +1,3 @@
+x,y = 0
 
-x  = gen2D(3,4)
-print(x)
+print(x,y)
