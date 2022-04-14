@@ -206,7 +206,6 @@ class myList(list):
         _col = [c / col * ratio for c in range(col)]
         _row = [r / row * ratio for r in range(row)]
         res = []
-
         if orientation[:2] == 'tb' or orientation[:2] == 'bt':
             flip = True
         else:
@@ -424,6 +423,7 @@ class myList(list):
         for x, y in enumerate(order):
             result.append(place.get(str(y)))
         return result
+
 class myString(str):
     def val_to_posTuple(val):
         def convert(var):

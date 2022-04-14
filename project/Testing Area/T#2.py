@@ -1,3 +1,3 @@
-x = dict(zip([i for i in range(10)],[i for i in range(10)[::-1]]))
+from myLib.myLibrary import myList
 
-print(x.get)
+print(myList.gen2D(2,2,orientation='lr-lr'))

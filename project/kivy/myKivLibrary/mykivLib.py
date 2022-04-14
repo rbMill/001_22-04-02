@@ -129,6 +129,13 @@ class SnapGrid(Layout):
                         self.elements_pos[widg] = rt
                     elif self.placement_mode == 'freeplace' and occupant == None:
                         self.elements_pos[widg] = rt
+                    elif self.placement_mode == 'switchplace':
+                        if occupant == None:
+                            self.elements_pos[widg] = rt
+                        else:
+                            self.elements_pos[occupant] = p_rt
+                            self.elements_pos[widg] = rt
+
             mv1()
             self.snap()
 
@@ -166,7 +173,7 @@ class Test(App):
         self.title = 'SnapGridTest'
         bwarg = {'size_hint':[1,1],'pos_hint':{'center_x':0.5,'center_y':0.5}}
         Window.maximize()
-        lay = SnapGrid(elements=7,col=2,rows=4,orientation='tb-lr',element_as_text=True,bwargs=bwarg)
+        lay = SnapGrid(elements=7,col=2,rows=4,orientation='tb-lr',placement_mode='switchplace',element_as_text=True,bwargs=bwarg)
         return lay
 
 if __name__ == '__main__':
