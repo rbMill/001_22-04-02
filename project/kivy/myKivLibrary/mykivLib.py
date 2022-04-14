@@ -8,6 +8,7 @@ from kivy.uix.layout import Layout
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.graphics import Color
+from kivy.animation import Animation
 from kivy.core.window import Window
 from kivy.config import Config
 from kivy.graphics.vertex_instructions import Bezier, Rectangle
@@ -36,7 +37,7 @@ class SnapGrid(Layout):
 
     def __init__(self,**kwargs):
         #defining Elements
-
+        self.anim = None
         self.mve = None
         kivyArgs = {}
         subArgs = {}
@@ -47,9 +48,11 @@ class SnapGrid(Layout):
         self.rows = 3
         self.bwargs = {}
         self.button_margin = [0,0]
+        self.animate_motion = True
         self.element_as_text = False
         self.allow_snap = True
         self.orientation = 'lr-bt'
+        self.prev_elements_pos = {}
         self.elements_pos = {}
 
         for k,v in kwargs.items():
@@ -87,10 +90,11 @@ class SnapGrid(Layout):
                 self.elements_pos[button] = D
                 self.element_name[i] = button
         _1()
-        Window.bind(on_resize=lambda *args: Clock.schedule_once(Clock.schedule_once(self.snap)))
-        Clock.schedule_once(Clock.schedule_once(self.snap))
+        Window.bind(on_resize=lambda *args:Clock.schedule_once(Clock.schedule_once(lambda *_:self.snap(animate=False))))
+        Clock.schedule_once(Clock.schedule_once(lambda *_:self.snap(animate=False)))
 
     def move(self, widg):
+        print(self.anim)
         if self.mve == None:
             def mv(*args):
                 widg.x = Window._mouse_x - int(widg.width / 2)
@@ -105,12 +109,13 @@ class SnapGrid(Layout):
         return res
 
     def do_layout(self, *largs):
-        pass
+        return
 
     def release(self,widg):
         if self.mve != None:
             self.mve.cancel()
             self.mve = None
+            self.prev_elements_pos = self.elements_pos.copy()
             def mv1(*args):
                 p_rt = self.elements_pos.get(widg)
                 cx = widg.x + int(widg.width / 2)
@@ -118,8 +123,9 @@ class SnapGrid(Layout):
                 px,py = cx/self.width,cy/self.height
                 xx = sorted(self.dmx.__add__([px]))
                 yy = sorted(self.dmy.__add__([py]))
-                x,y = xx[xx.index(px)-1],yy[yy.index(py)-1]
-                rt = [myMath.clamp(x,0,1),myMath.clamp(y,0,1)]
+                x, y = xx[xx.index(px) - 1], yy[yy.index(py) - 1]
+                x,y = [myMath.clamp(x,0,1),myMath.clamp(y,0,1)]
+                rt = [x,y]
                 try:
                     occupant = list(self.elements_pos.keys())[list(self.elements_pos.values()).index(rt)]
                 except ValueError:
@@ -135,16 +141,25 @@ class SnapGrid(Layout):
                         else:
                             self.elements_pos[occupant] = p_rt
                             self.elements_pos[widg] = rt
-
             mv1()
             self.snap()
 
-    def snap(self,*args):
+    def snap(self,*args,**kwargs):
         if self.allow_snap:
-            dx = (self.width / self.col)
-            dy = (self.height / self.rows)
+            sW = self.width
+            sH = self.height
+            dx = (sW / self.col)
+            dy = (sH / self.rows)
             ox,oy = 0,0
-            for k,v in self.elements_pos.items():
+            past = self.prev_elements_pos
+            animate = kwargs.get('animate')
+            ftime = False
+            if animate == None:
+                animate = self.animate_motion
+            if len(past) == 0:
+                ftime = True
+                past = self.elements_pos.copy()
+            for (k,v),v0 in zip(self.elements_pos.items(),past.values()):
                 xr,yr = v
                 for i,d in k.pos_hint.items():
                     if i == 'center_x':
@@ -159,13 +174,23 @@ class SnapGrid(Layout):
                         oy = -k.height + dy * d
                     elif i == 'bottom':
                         oy = dy * d
-
-                k.pos = [xr*self.width+ox,yr*self.height+oy]
+                targ_pos = [xr*sW+ox,yr*sH+oy]
                 kw, kh = k.size_hint
-                if kw != None:
-                    k.width = kw*dx
-                if kh != None:
-                    k.height = kh*dy
+                if animate and not ftime:
+                    size = {}
+                    if kw != None:
+                        size['width'] = kw*dx
+                    if kh != None:
+                        size['height'] = kh*dy
+                    self.anim = Animation(pos=targ_pos,**size)
+                    self.anim.start(k)
+                elif not animate:
+                    k.pos = targ_pos
+                    if kw != None:
+                        k.width = kw*dx
+                    if kh != None:
+                        k.height = kh*dy
+                self.prev_elements_pos[k] = targ_pos
 
 
 class Test(App):
