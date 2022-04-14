@@ -23,20 +23,26 @@ class SnapGrid(Layout):
     __doc__ = \
         '''
         Params:
-            elements: int or list; the number of generated buttons or a list with a correspondng name
+            elements: int,list,dict;
+                int: Generates the number of elements with prefab
+                list: Generates the number of elements with prefab and intterator name_value
             col: int, number of columns of the layout/grid
             rows: int, number of rows of the layout/grid
             placement_mode, str, 
                 'freeplace' - placing only when a greed is free
                 'switchplace' - placing anywere and element will switch place
                 'stackplace' - placing on an element stacks on top of it
-                'slidespace(direction)' - placing an element unfreely pushes neighboring widget
+                'slidesplace(direction)' - placing an element unfreely pushes neighboring widget
                     direction uses lr-bt,lr-tb,bt-lr...etc to describe cascading repositioning direction 
+            element_as_text: bool, the widget will display text by their generated/stored identifier
+            
+            bwarg
         '''
 
 
     def __init__(self,**kwargs):
         #defining Elements
+        self.__anim_duration = 0.1
         self.anim = None
         self.mve = None
         kivyArgs = {}
@@ -52,7 +58,6 @@ class SnapGrid(Layout):
         self.element_as_text = False
         self.allow_snap = True
         self.orientation = 'lr-bt'
-        self.prev_elements_pos = {}
         self.elements_pos = {}
 
         for k,v in kwargs.items():
@@ -61,14 +66,25 @@ class SnapGrid(Layout):
             else:
                 subArgs[k] = v
                 self.__setattr__(k,v)
-        if self.elements > (self.rows*self.col):
+        if type(self.elements) == list or type(self.elements) == list:
+            numval = len(self.elements)
+        elif type(self.elements) == dict or type(self.elements) == set:
+            numval = len(self.elements)
+        elif type(self.elements) == int:
+            numval = self.elements
+        else:
+            raise TypeError('element type not valid, must be either list,int,dict,set,tuple')
+
+        if numval > (self.rows*self.col):
             raise ValueError('element count exceed gridspace')
         self.dimensions = myList.gen2D(self.col,self.rows,orientation=self.orientation)
         self.dmx = [c/self.col for c in range(self.col) ]
         self.dmy = [r / self.rows for r in range(self.rows)]
-        if 'size_hint' not in self.bwargs.keys():
+        bwargk = self.bwargs.keys()
+        if 'size_hint' not in bwargk:
             self.bwargs['size_hint'] = [1,1]
-
+        if 'pos_hint' not in bwargk:
+            self.bwargs['pos_hint'] = {'center_x':0.5,'center_y':0.5}
         #binding events
         super(SnapGrid, self).__init__(**kivyArgs)
         #generating elements
@@ -88,13 +104,20 @@ class SnapGrid(Layout):
                 if self.element_as_text:
                     button.text = i
                 self.elements_pos[button] = D
+                if i in self.element_name.keys():
+                    raise Warning('a widget with an identifier already exist,\nwhich will result to lost of reference')
                 self.element_name[i] = button
         _1()
-        Window.bind(on_resize=lambda *args:Clock.schedule_once(Clock.schedule_once(lambda *_:self.snap(animate=False))))
+        def winbind(*_):
+            def wb(*_):
+                for i in self.children:
+                    Animation.stop_all(i)
+                self.snap(animate=False)
+            Clock.schedule_once(Clock.schedule_once(wb))
+        Window.bind(on_resize=winbind)
         Clock.schedule_once(Clock.schedule_once(lambda *_:self.snap(animate=False)))
 
-    def move(self, widg):
-        print(self.anim)
+    def move(self, widg,**kwargs):
         if self.mve == None:
             def mv(*args):
                 widg.x = Window._mouse_x - int(widg.width / 2)
@@ -111,11 +134,10 @@ class SnapGrid(Layout):
     def do_layout(self, *largs):
         return
 
-    def release(self,widg):
+    def release(self,widg,**kwargs):
         if self.mve != None:
             self.mve.cancel()
             self.mve = None
-            self.prev_elements_pos = self.elements_pos.copy()
             def mv1(*args):
                 p_rt = self.elements_pos.get(widg)
                 cx = widg.x + int(widg.width / 2)
@@ -141,6 +163,8 @@ class SnapGrid(Layout):
                         else:
                             self.elements_pos[occupant] = p_rt
                             self.elements_pos[widg] = rt
+                    elif self.placement_mode[:10] == 'slideplace':
+                        print(self.placement_mode[10:17])
             mv1()
             self.snap()
 
@@ -151,15 +175,11 @@ class SnapGrid(Layout):
             dx = (sW / self.col)
             dy = (sH / self.rows)
             ox,oy = 0,0
-            past = self.prev_elements_pos
             animate = kwargs.get('animate')
             ftime = False
             if animate == None:
                 animate = self.animate_motion
-            if len(past) == 0:
-                ftime = True
-                past = self.elements_pos.copy()
-            for (k,v),v0 in zip(self.elements_pos.items(),past.values()):
+            for k,v in self.elements_pos.items():
                 xr,yr = v
                 for i,d in k.pos_hint.items():
                     if i == 'center_x':
@@ -182,7 +202,7 @@ class SnapGrid(Layout):
                         size['width'] = kw*dx
                     if kh != None:
                         size['height'] = kh*dy
-                    self.anim = Animation(pos=targ_pos,**size)
+                    self.anim = Animation(pos=targ_pos,**size,duration=self.__anim_duration)
                     self.anim.start(k)
                 elif not animate:
                     k.pos = targ_pos
@@ -190,15 +210,13 @@ class SnapGrid(Layout):
                         k.width = kw*dx
                     if kh != None:
                         k.height = kh*dy
-                self.prev_elements_pos[k] = targ_pos
 
 
 class Test(App):
     def build(self):
         self.title = 'SnapGridTest'
-        bwarg = {'size_hint':[1,1],'pos_hint':{'center_x':0.5,'center_y':0.5}}
         Window.maximize()
-        lay = SnapGrid(elements=7,col=2,rows=4,orientation='tb-lr',placement_mode='switchplace',element_as_text=True,bwargs=bwarg)
+        lay = SnapGrid(elements=4,placement_mode='slideplace(lr-bt)')
         return lay
 
 if __name__ == '__main__':

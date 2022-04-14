@@ -56,8 +56,8 @@
       <recent name="C:\Users\Dell\Documents\GitHub\001_22-04-02\project" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.mykivLib">
-    <configuration name="Reflection" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.T#2">
+    <configuration name="T#1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="001_22-04-02" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -65,11 +65,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/project/mathplotlib" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/project/Testing Area" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/project/mathplotlib/Reflection.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/project/Testing Area/T#1.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -164,11 +164,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.mykivLib" />
         <item itemvalue="Python.T#2" />
+        <item itemvalue="Python.T#1" />
+        <item itemvalue="Python.mykivLib" />
         <item itemvalue="Python.myLibrary (1)" />
         <item itemvalue="Python.myLibrary" />
-        <item itemvalue="Python.Reflection" />
       </list>
     </recent_temporary>
   </component>
