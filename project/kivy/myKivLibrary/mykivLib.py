@@ -58,6 +58,7 @@ class SnapGrid(Layout):
         self.element_as_text = False
         self.allow_snap = True
         self.orientation = 'lr-bt'
+        self.placement_mode_pos = None
         self.elements_pos = {}
 
         for k,v in kwargs.items():
@@ -164,7 +165,30 @@ class SnapGrid(Layout):
                             self.elements_pos[occupant] = p_rt
                             self.elements_pos[widg] = rt
                     elif self.placement_mode[:10] == 'slideplace':
-                        print(self.placement_mode[10:17])
+                        orien = self.placement_mode[11:16]
+                        if occupant == None:
+                            self.elements_pos[widg] = rt
+                        else:
+                            if self.placement_mode_pos == None:
+                                self.placement_mode_pos = myList.sort2D(self.dimensions,orien)
+                            spm = self.placement_mode_pos
+                            widgmet = {}
+                            for i in spm[spm.index(rt):]+spm[:spm.index(rt)]:
+                                try:
+                                    occup = list(self.elements_pos.keys())[
+                                        list(self.elements_pos.values()).index(i)]
+                                except ValueError:
+                                    occup = None
+                                widgmet[occup] = i
+                                if occup == None or occup == widg:
+                                    break
+                            tar = None
+                            for w in list(widgmet.keys())[::-1]:
+                                p = widgmet.get(w)
+                                if w != None and tar != None and w != widg:
+                                    self.elements_pos[w] = tar
+                                tar = p
+                            self.elements_pos[widg] = rt
             mv1()
             self.snap()
 
@@ -216,7 +240,8 @@ class Test(App):
     def build(self):
         self.title = 'SnapGridTest'
         Window.maximize()
-        lay = SnapGrid(elements=4,placement_mode='slideplace(lr-bt)')
+        lay = SnapGrid(elements=15,col=5,rows=5,element_as_text=True,orientation='tb-lr',placement_mode='slideplace(lr-bt)'
+                       ,bwargs={'size_hint':[0.9,0.9],'pos_hint':{'center_x':0.5,'center_y':0.5}})
         return lay
 
 if __name__ == '__main__':
