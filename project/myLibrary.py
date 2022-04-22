@@ -98,9 +98,9 @@ class myMath():
             return num1 * num2
 
     def clamp(val, minlim, maxlim):
-        if minlim <= val:
+        if minlim >= val:
             return minlim
-        elif maxlim >= val:
+        elif maxlim <= val:
             return maxlim
         else:
             return val
@@ -206,20 +206,61 @@ class myList(list):
         _col = [c / col * ratio for c in range(col)]
         _row = [r / row * ratio for r in range(row)]
         res = []
+        if not(regex.search(r'(lr|rl)-(tb|bt)',orientation) or regex.search(r'(tb|bt)-(lr|rl)',orientation)):
+            raise ValueError('Invalid orientation either must be 1 lr,rl partner with bt,tb')
         if orientation[:2] == 'tb' or orientation[:2] == 'bt':
             flip = True
         else:
             flip = False
-        dik = {'lr': _col, 'rl': _col[::-1], 'bt': _row, 'tb': _row[::-1]}
-
+        dik = {'lr':_col,'rl':_col[::-1],'bt':_row,'tb':_row[::-1]}
         xcol = dik.get(orientation[:2])
         yrow = dik.get(orientation[-2:])
-        for x in xcol:
-            for y in yrow:
+        for y in yrow:
+            for x in xcol:
                 if flip:
-                    res.append([y, x])
+                    res.append([y,x])
                 else:
                     res.append([x, y])
+        return res
+
+    def sort2D(arr2D, orientation):
+        _col, _row = zip(*arr2D)
+        res = []
+
+        def change(val, dir):
+            dik = {'lr': sorted(val), 'rl': sorted(val, reverse=True), 'bt': sorted(val),
+                   'tb': sorted(val, reverse=True)}
+            return dik.get(dir)
+
+        if 'lr' in orientation:
+            xd = 'lr'
+        else:
+            xd = 'rl'
+        if 'tb' in orientation:
+            yd = 'tb'
+        else:
+            yd = 'bt'
+        xcol = change(_col, xd)
+        yrow = change(_row, yd)
+
+        def sort(top, bot, flip):
+            for t in top:
+                for b in bot:
+                    if flip:
+                        p = [b, t]
+                        if p in arr2D and res.count(p) < arr2D.count(p):
+                            res.append(p)
+                    else:
+                        p = [t, b]
+                        if p in arr2D and res.count(p) < arr2D.count(p):
+                            res.append(p)
+
+        if regex.search(r'(lr|rl)-(tb|bt)', orientation):
+            sort(yrow, xcol, True)
+        elif regex.search(r'(tb|bt)-(lr|rl)', orientation):
+            sort(xcol, yrow, False)
+        else:
+            raise ValueError('Invalid orientation either must be 1 lr,rl partner with bt,tb')
         return res
 
     def list_subtract(l1, l2):
@@ -423,7 +464,6 @@ class myList(list):
         for x, y in enumerate(order):
             result.append(place.get(str(y)))
         return result
-
 class myString(str):
     def val_to_posTuple(val):
         def convert(var):
@@ -445,7 +485,7 @@ class myString(str):
                     raise ValueError('did not match [A-Z][0-9]')
             elif len(val) == 1:
                 if bool(regex.search('[A-Z]', val)):
-                    return convert(myString.chess_to_int(val))
+                    return convert(myLibrary.myString.chess_to_int(val))
                 elif bool(regex.search('[0-9]', val)):
                     return (0, int(val))
                 else:

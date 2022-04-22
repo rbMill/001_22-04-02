@@ -7,6 +7,8 @@ from kivy.app import App
 from kivy.uix.layout import Layout
 from kivy.uix.widget import Widget
 from kivy.uix.button import Button
+Button.background_normal = ''
+Button.background_color = [0.5,0.5,0.5,1]
 from kivy.graphics import Color
 from kivy.animation import Animation
 from kivy.core.window import Window
@@ -19,7 +21,7 @@ from kivy.lang.builder import Builder
 from kivy.clock import Clock
 
 
-class SnapGrid(Layout):
+class SnapGridLayout(Layout):
     __doc__ = \
         '''
         Params:
@@ -87,7 +89,7 @@ class SnapGrid(Layout):
         if 'pos_hint' not in bwargk:
             self.bwargs['pos_hint'] = {'center_x':0.5,'center_y':0.5}
         #binding events
-        super(SnapGrid, self).__init__(**kivyArgs)
+        super(SnapGridLayout, self).__init__(**kivyArgs)
         #generating elements
         if type(self.elements) == list or type(self.elements) == tuple:
             _lmn = self.elements
@@ -235,12 +237,11 @@ class SnapGrid(Layout):
                     if kh != None:
                         k.height = kh*dy
 
-
 class Test(App):
     def build(self):
-        self.title = 'SnapGridTest'
+        self.title = 'SnapGridLayoutTest'
         Window.maximize()
-        lay = SnapGrid(elements=15,col=5,rows=5,element_as_text=True,orientation='tb-lr',placement_mode='slideplace(lr-bt)'
+        lay = SnapGridLayout(elements=15,col=5,rows=5,element_as_text=True,orientation='tb-lr',placement_mode='slideplace(tb-lr)'
                        ,bwargs={'size_hint':[0.9,0.9],'pos_hint':{'center_x':0.5,'center_y':0.5}})
         return lay
 
