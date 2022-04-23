@@ -4,6 +4,13 @@ import math
 from pynput.keyboard import Controller as Kcontrol,Key
 from pynput.mouse import Controller as Mcontrol,Button as MButton
 
+import os
+os.environ["KIVY_NO_ARGS"] = "1"
+os.environ['KIVY_IMAGE'] = "pil,sdl2" # use pil instead of SDL2 image if you get the libpng16 error
+# you must add to the path the location of your SDL2 binaries
+os.environ['PATH'] += ';' + os.path.expandvars('%AppData%\\Python\\share\\glew\\bin')
+os.environ['PATH'] += ';' + os.path.expandvars('%AppData%\\Python\\share\\sdl2\\bin')
+
 from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
@@ -261,13 +268,16 @@ class uilayout(GridLayout):
 
 class AutoKeys(App):
     def build(self):
-        con = Config
-        con.set('graphics', 'width', '500')
-        con.set('graphics', 'height', '500')
-        con.set('graphics', 'resizable', '0')
-        con.set('input', 'mouse', 'mouse,multitouch_on_demand')
-        con.write()
-        Window.clearcolor = [0.2,0.2,0.2,1]
+        try:
+            Window.clearcolor = [0.2, 0.2, 0.2, 1]
+        except AttributeError:
+            pass
+        Config.set('graphics', 'width', '500')
+        Config.set('graphics', 'height', '500')
+        Config.set('graphics', 'resizable', '1')
+        Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
+        Config.write()
+        self.icon = 'senjogahara.png'
         return uilayout()
 
 AutoKeys().run()
