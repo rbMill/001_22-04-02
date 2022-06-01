@@ -1,46 +1,40 @@
-class baseClass:
-    data_type = 'none'
-    def __init__(self,data_type,*args):
-        if len(args) > 0:
-            print('from_person',args)
-        self.data_type = data_type
+def CorCof(x_v,y_v):
+    sum_x = 0
+    sum_y = 0
+    sum_xy = 0
+    sum_x2 = 0
+    sum_y2 = 0
+    n = len(x_v)
+    for x,y in zip(x_v,y_v):
+        print(x,y)
+        sum_x+=x
+        sum_y+=y
+        sum_xy+=x*y
+        sum_x2+=x*x
+        sum_y2+=y*y
+    top = n*sum_xy - (sum_x*sum_y)
+    bottom = ((n*sum_x2-sum_x**2)*
+    ((n*sum_y2-sum_y**2)))**0.5
+    result = round(top/bottom,3)
+    return result
 
-    def other_method(self,*args):
-        print( f'{self.data_type} is {" ".join(args)}')
+def mean(l):
+    return round(sum(l)/len(l),3)
 
-class animalClass(baseClass):
-    def __init__(self,*args):
-        if len(args) > 0:
-            print('from_animal',args)
-        super(animalClass, self).__init__('animal')
+def sde(l,m):
+    result = 0
+    for i in l:
+        result += (i-m)**2
+    return round((result/len(l))**0.5,3)
+
+x = [9,12,6,15,3,18,10,13,7]
+x1 = [9,17,9,20,2,21,15,22,26]
+mewx = mean(x)
+mewx1 = mean(x1)
+print("mean",mewx,mewx1)
+devx = sde(x,mewx)
+devx1 = sde(x1,mewx1)
+print("standard devs",devx,devx1)
+#critical value == 1.860
 
 
-class personClass(baseClass):
-    def __init__(self,*args):
-        if len(args) > 0:
-            print('from_person',args)
-        super(personClass, self).__init__('person')
-
-    def other_method(self,*args):
-        print('The person was')
-        super(personClass, self).other_method(*args)
-
-class hybridClass(personClass,animalClass):
-    def __init__(self,*args):
-        super(hybridClass, self).__init__()
-
-a = personClass()
-a.other_method('hayasaca')
-#
-# b = animalClass()
-# b.other_method('fluffy')
-#
-# c = hybridClass()
-# print(hybridClass.mro())
-# for I,i in enumerate(hybridClass.mro()):
-#     try:
-#         print(I,i().data_type,i,sep='~')
-#     except TypeError:
-#         print(I,i('none').data_type, i,sep='~')
-#     except AttributeError:
-#         print(I,i.__name__)

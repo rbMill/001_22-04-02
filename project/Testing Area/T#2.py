@@ -26,7 +26,7 @@ from kivy.graphics.vertex_instructions import Bezier, Rectangle
 
 
 
-class do_layoutGridLayout(Layout):
+class SnapGridLayout(Layout):
     __doc__ = \
         '''
         Params:
@@ -85,7 +85,7 @@ class do_layoutGridLayout(Layout):
     elements_pos = DictProperty()
 
     def __init__(self, **kwargs):
-        super(do_layoutGridLayout, self).__init__(**self.kivyArgs)
+        super(SnapGridLayout, self).__init__(**self.kivyArgs)
         update = self._trigger_layout
         fbind = self.fbind
         fbind('spacing', update)
@@ -162,72 +162,75 @@ class do_layoutGridLayout(Layout):
             res = self.children[name]
         return res
 
-    def move(self, widg, *args,**kwargs):
-        print('move',self.mve)
-        if self.mve == None:
-            def mv(*args):
-                widg.x = Window._mouse_x - int(widg.width / 2)
-                widg.y = Window.mouse_pos[1] - int(widg.height / 2)
-            self.mve = Clock.schedule_interval(mv, 0.000001)
+    def move(self, widg=None, *args,**kwargs):
+        print('move',widg)
+        if widg != None:
+            if self.mve == None:
+                def mv(*args):
+                    widg.x = Window._mouse_x - int(widg.width / 2)
+                    widg.y = Window.mouse_pos[1] - int(widg.height / 2)
+                self.mve = Clock.schedule_interval(mv, 0.001)
 
-    def release(self, widg, *args,**kwargs):
-        print('release',self.mve)
-        if self.mve != None:
-            self.mve.cancel()
-            self.mve = None
-            def mv1(*args):
-                p_rt = self.elements_pos.get(widg)
-                cx = widg.x + int(widg.width / 2)
-                cy = widg.y + int(widg.height / 2)
-                px, py = cx / self.width, cy / self.height
-                xx = sorted(self.dmx.__add__([px]))
-                yy = sorted(self.dmy.__add__([py]))
-                x, y = xx[xx.index(px) - 1], yy[yy.index(py) - 1]
-                x, y = [myMath.clamp(x, 0, 1), myMath.clamp(y, 0, 1)]
-                rt = [x, y]
-                try:
-                    occupant = list(self.elements_pos.keys())[list(self.elements_pos.values()).index(rt)]
-                except ValueError:
-                    occupant = None
-                if p_rt != rt:
-                    if self.placement_mode == 'stackplace':
-                        self.elements_pos[widg] = rt
-                    elif self.placement_mode == 'freeplace' and occupant == None:
-                        self.elements_pos[widg] = rt
-                    elif self.placement_mode == 'switchplace':
-                        if occupant == None:
+    def release(self, widg=None, *args,**kwargs):
+        print('release',widg)
+        if widg != None:
+            if self.mve != None:
+                self.mve.cancel()
+                self.mve = None
+                def mv1(*args):
+                    p_rt = self.elements_pos.get(widg)
+                    cx = widg.x + int(widg.width / 2)
+                    cy = widg.y + int(widg.height / 2)
+                    px, py = cx / self.width, cy / self.height
+                    xx = sorted(self.dmx.__add__([px]))
+                    yy = sorted(self.dmy.__add__([py]))
+                    x, y = xx[xx.index(px) - 1], yy[yy.index(py) - 1]
+                    x, y = [myMath.clamp(x, 0, 1), myMath.clamp(y, 0, 1)]
+                    rt = [x, y]
+                    try:
+                        occupant = list(self.elements_pos.keys())[list(self.elements_pos.values()).index(rt)]
+                    except ValueError:
+                        occupant = None
+                    if p_rt != rt:
+                        if self.placement_mode == 'stackplace':
                             self.elements_pos[widg] = rt
-                        else:
-                            self.elements_pos[occupant] = p_rt
+                        elif self.placement_mode == 'freeplace' and occupant == None:
                             self.elements_pos[widg] = rt
-                    elif self.placement_mode[:10] == 'slideplace':
-                        orien = self.placement_mode[11:16]
-                        if occupant == None:
-                            self.elements_pos[widg] = rt
-                        else:
-                            if self.placement_mode_pos == None:
-                                self.placement_mode_pos = myList.sort2D(self.dimensions, orien)
-                            spm = self.placement_mode_pos
-                            widgmet = {}
-                            for i in spm[spm.index(rt):] + spm[:spm.index(rt)]:
-                                try:
-                                    occup = list(self.elements_pos.keys())[
-                                        list(self.elements_pos.values()).index(i)]
-                                except ValueError:
-                                    occup = None
-                                widgmet[occup] = i
-                                if occup == None or occup == widg:
-                                    break
-                            tar = None
-                            for w in list(widgmet.keys())[::-1]:
-                                p = widgmet.get(w)
-                                if w != None and tar != None and w != widg:
-                                    self.elements_pos[w] = tar
-                                tar = p
-                            self.elements_pos[widg] = rt
-            mv1()
-            self.do_layout()
-        # Clock.schedule_once(self.do_layout)
+                        elif self.placement_mode == 'switchplace':
+                            if occupant == None:
+                                self.elements_pos[widg] = rt
+                            else:
+                                self.elements_pos[occupant] = p_rt
+                                self.elements_pos[widg] = rt
+                        elif self.placement_mode[:10] == 'slideplace':
+                            orien = self.placement_mode[11:16]
+                            if occupant == None:
+                                self.elements_pos[widg] = rt
+                            else:
+                                if self.placement_mode_pos == None:
+                                    self.placement_mode_pos = myList.sort2D(self.dimensions, orien)
+                                spm = self.placement_mode_pos
+                                widgmet = {}
+                                for i in spm[spm.index(rt):] + spm[:spm.index(rt)]:
+                                    try:
+                                        occup = list(self.elements_pos.keys())[
+                                            list(self.elements_pos.values()).index(i)]
+                                    except ValueError:
+                                        occup = None
+                                    widgmet[occup] = i
+                                    if occup == None or occup == widg:
+                                        break
+                                tar = None
+                                for w in list(widgmet.keys())[::-1]:
+                                    p = widgmet.get(w)
+                                    if w != None and tar != None and w != widg:
+                                        self.elements_pos[w] = tar
+                                    tar = p
+                                self.elements_pos[widg] = rt
+                mv1()
+                self.do_layout()
+            # Clock.schedule_once(self.do_layout)
+
 
 
     def do_layout(self, *args, **kwargs):
@@ -278,13 +281,13 @@ class do_layoutGridLayout(Layout):
         self.elements_pos[widget] = self.dimensions[len(self.children)]
         widget.on_press=lambda :self.move(widget)
         widget.on_release=lambda :self.release(widget)
-        super(do_layoutGridLayout, self).add_widget(widget,*args, **kwargs)
+        super(SnapGridLayout, self).add_widget(widget,*args, **kwargs)
 
 class Test(App):
     def build(self):
-        self.title = 'do_layoutGridLayoutTest'
+        self.title = 'GridLayoutTest'
         Window.maximize()
-        lay = do_layoutGridLayout(elements=3, col=5, rows=5, element_as_text=True, orientation='tb-lr',
+        lay = SnapGridLayout(elements=3, col=5, rows=5, element_as_text=True, orientation='tb-lr',
                              placement_mode='slideplace(tb-lr)'
                              , bwargs={'size_hint': [0.9, 0.9], 'pos_hint': {'center_x': 0.5, 'center_y': 0.5}})
         return lay
